@@ -116,6 +116,7 @@ El parámetro `-v` muestra el resultado detallado de cada test y `-s` permite vi
 
 ## Reporte HTML
 
+
 Para generar un reporte HTML de la ejecución:
 
 ```bash

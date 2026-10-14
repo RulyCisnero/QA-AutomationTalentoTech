@@ -2,13 +2,397 @@
 <html>
   <head>
     <meta charset="utf-8"/>
-    <title id="head-title">reporte.html</title>
-      <link href="assets\style.css" rel="stylesheet" type="text/css"/>
+    <title id="head-title">QA Automation | Reporte de ejecución</title>
+      <style type="text/css">body {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  /* do not increase min-width as some may use split screens */
+  min-width: 800px;
+  color: #999;
+}
+
+h1 {
+  font-size: 24px;
+  color: black;
+}
+
+h2 {
+  font-size: 16px;
+  color: black;
+}
+
+p {
+  color: black;
+}
+
+a {
+  color: #999;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+/******************************
+ * SUMMARY INFORMATION
+ ******************************/
+#environment td {
+  padding: 5px;
+  border: 1px solid #e6e6e6;
+  vertical-align: top;
+}
+#environment tr:nth-child(odd) {
+  background-color: #f6f6f6;
+}
+#environment ul {
+  margin: 0;
+  padding: 0 20px;
+}
+
+/******************************
+ * TEST RESULT COLORS
+ ******************************/
+span.passed,
+.passed .col-result {
+  color: green;
+}
+
+span.skipped,
+span.xfailed,
+span.rerun,
+.skipped .col-result,
+.xfailed .col-result,
+.rerun .col-result {
+  color: orange;
+}
+
+span.error,
+span.failed,
+span.xpassed,
+.error .col-result,
+.failed .col-result,
+.xpassed .col-result {
+  color: red;
+}
+
+.col-links__extra {
+  margin-right: 3px;
+}
+
+/******************************
+ * RESULTS TABLE
+ *
+ * 1. Table Layout
+ * 2. Extra
+ * 3. Sorting items
+ *
+ ******************************/
+/*------------------
+ * 1. Table Layout
+ *------------------*/
+#results-table {
+  border: 1px solid #e6e6e6;
+  color: #999;
+  font-size: 12px;
+  width: 100%;
+}
+#results-table th,
+#results-table td {
+  padding: 5px;
+  border: 1px solid #e6e6e6;
+  text-align: left;
+}
+#results-table th {
+  font-weight: bold;
+}
+
+/*------------------
+ * 2. Extra
+ *------------------*/
+.logwrapper {
+  max-height: 230px;
+  overflow-y: scroll;
+  background-color: #e6e6e6;
+}
+.logwrapper.expanded {
+  max-height: none;
+}
+.logwrapper.expanded .logexpander:after {
+  content: "collapse [-]";
+}
+.logwrapper .logexpander {
+  z-index: 1;
+  position: sticky;
+  top: 10px;
+  width: max-content;
+  border: 1px solid;
+  border-radius: 3px;
+  padding: 5px 7px;
+  margin: 10px 0 10px calc(100% - 80px);
+  cursor: pointer;
+  background-color: #e6e6e6;
+}
+.logwrapper .logexpander:after {
+  content: "expand [+]";
+}
+.logwrapper .logexpander:hover {
+  color: #000;
+  border-color: #000;
+}
+.logwrapper .log {
+  min-height: 40px;
+  position: relative;
+  top: -50px;
+  height: calc(100% + 50px);
+  border: 1px solid #e6e6e6;
+  color: black;
+  display: block;
+  font-family: "Courier New", Courier, monospace;
+  padding: 5px;
+  padding-right: 80px;
+  white-space: pre-wrap;
+}
+
+div.media {
+  border: 1px solid #e6e6e6;
+  float: right;
+  height: 240px;
+  margin: 0 5px;
+  overflow: hidden;
+  width: 320px;
+}
+
+.media-container {
+  display: grid;
+  grid-template-columns: 25px auto 25px;
+  align-items: center;
+  flex: 1 1;
+  overflow: hidden;
+  height: 200px;
+}
+
+.media-container--fullscreen {
+  grid-template-columns: 0px auto 0px;
+}
+
+.media-container__nav--right,
+.media-container__nav--left {
+  text-align: center;
+  cursor: pointer;
+}
+
+.media-container__viewport {
+  cursor: pointer;
+  text-align: center;
+  height: inherit;
+}
+.media-container__viewport img,
+.media-container__viewport video {
+  object-fit: cover;
+  width: 100%;
+  max-height: 100%;
+}
+
+.media__name,
+.media__counter {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  flex: 0 0 25px;
+  align-items: center;
+}
+
+.collapsible td:not(.col-links) {
+  cursor: pointer;
+}
+.collapsible td:not(.col-links):hover::after {
+  color: #bbb;
+  font-style: italic;
+  cursor: pointer;
+}
+
+.col-result {
+  width: 130px;
+}
+.col-result:hover::after {
+  content: " (hide details)";
+}
+
+.col-result.collapsed:hover::after {
+  content: " (show details)";
+}
+
+#environment-header h2:hover::after {
+  content: " (hide details)";
+  color: #bbb;
+  font-style: italic;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+#environment-header.collapsed h2:hover::after {
+  content: " (show details)";
+  color: #bbb;
+  font-style: italic;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/*------------------
+ * 3. Sorting items
+ *------------------*/
+.sortable {
+  cursor: pointer;
+}
+.sortable.desc:after {
+  content: " ";
+  position: relative;
+  left: 5px;
+  bottom: -12.5px;
+  border: 10px solid #4caf50;
+  border-bottom: 0;
+  border-left-color: transparent;
+  border-right-color: transparent;
+}
+.sortable.asc:after {
+  content: " ";
+  position: relative;
+  left: 5px;
+  bottom: 12.5px;
+  border: 10px solid #4caf50;
+  border-top: 0;
+  border-left-color: transparent;
+  border-right-color: transparent;
+}
+
+.hidden, .summary__reload__button.hidden {
+  display: none;
+}
+
+.summary__data {
+  flex: 0 0 550px;
+}
+.summary__reload {
+  flex: 1 1;
+  display: flex;
+  justify-content: center;
+}
+.summary__reload__button {
+  flex: 0 0 300px;
+  display: flex;
+  color: white;
+  font-weight: bold;
+  background-color: #4caf50;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.summary__reload__button:hover {
+  background-color: #46a049;
+}
+.summary__spacer {
+  flex: 0 0 550px;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+}
+
+.filters,
+.collapse {
+  display: flex;
+  align-items: center;
+}
+.filters button,
+.collapse button {
+  color: #999;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.filters button:hover,
+.collapse button:hover {
+  color: #ccc;
+}
+
+.filter__label {
+  margin-right: 10px;
+}
+
+/******************************
+ * CUSTOM CSS
+ * reports\report.css
+ ******************************/
+
+
+/* Identidad visual del reporte */
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: #1e293b;
+    background: #f4f7fb;
+}
+
+/* Encabezados */
+h1, h2, h3 {
+    color: #172554;
+    letter-spacing: -0.3px;
+}
+
+/* Tablas */
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+th {
+    background: #172554 !important;
+    color: #ffffff !important;
+    padding: 12px !important;
+}
+
+td {
+    padding: 10px !important;
+}
+
+/* Filas */
+tr:hover td {
+    background-color: #f1f5f9;
+}
+
+/* Enlaces */
+a {
+    color: #2563eb;
+    font-weight: 600;
+}
+
+/* Secciones */
+#environment,
+#summary,
+#results-table {
+    margin-bottom: 24px;
+}
+
+/* Mejor lectura de los detalles */
+pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    border-radius: 8px;
+    padding: 12px;
+}
+
+      </style>
+    
   </head>
   <body>
-    <h1 id="title">reporte.html</h1>
-    <p>Report generated on 08-Oct-2026 at 20:34:41 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a>
-        v4.1.1</p>
+    <h1 id="title">QA Automation | Reporte de ejecución</h1>
+    <p>Report generated on 13-Oct-2026 at 22:43:56 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a>
+        v4.2.0</p>
     <div id="environment-header">
       <h2>Environment</h2>
     </div>
@@ -23,8 +407,9 @@
     <template id="template_results-table__body--empty">
       <tbody class="results-table-row">
         <tr id="not-found-message">
-          <td colspan="4">No results found. Check the filters.</th>
+          <td colspan="4">No results found. Check the filters.</td>
         </tr>
+      </tbody>
     </template>
     <template id="template_results-table__tbody">
       <tbody class="results-table-row">
@@ -35,14 +420,14 @@
             <div class="extraHTML"></div>
             <div class="media">
               <div class="media-container">
-                  <div class="media-container__nav--left"><</div>
+                  <div class="media-container__nav--left">&lt;</div>
                   <div class="media-container__viewport">
                     <img src="" />
                     <video controls>
                       <source src="" type="video/mp4">
                     </video>
                   </div>
-                  <div class="media-container__nav--right">></div>
+                  <div class="media-container__nav--right">&gt;</div>
                 </div>
                 <div class="media__name"></div>
                 <div class="media__counter"></div>
@@ -60,8 +445,10 @@
       <div class="summary__data">
         <h2>Summary</h2>
         <div class="additional-summary prefix">
+          <h2>TalentoTech QA Automation</h2>
+          <p>Suite automatizada de validación funcional de SauceDemo con Selenium WebDriver y Pytest.</p>
         </div>
-        <p class="run-count">3 tests took 00:00:29.</p>
+        <p class="run-count">3 tests took 00:00:26.</p>
         <p class="filter">(Un)check the boxes to filter the results.</p>
         <div class="summary__reload">
           <div class="summary__reload__button hidden" onclick="location.reload()">
@@ -71,20 +458,22 @@
         <div class="summary__spacer"></div>
         <div class="controls">
           <div class="filters">
-            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="failed" />
-            <span class="failed">1 Failed,</span>
-            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="passed" />
-            <span class="passed">2 Passed,</span>
-            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="skipped" disabled/>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="failed" disabled>
+            <span class="failed">0 Failed,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="passed" >
+            <span class="passed">3 Passed,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="skipped" disabled>
             <span class="skipped">0 Skipped,</span>
-            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="xfailed" disabled/>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="xfailed" disabled>
             <span class="xfailed">0 Expected failures,</span>
-            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="xpassed" disabled/>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="xpassed" disabled>
             <span class="xpassed">0 Unexpected passes,</span>
-            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="error" disabled/>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="error" disabled>
             <span class="error">0 Errors,</span>
-            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="rerun" disabled/>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="rerun" disabled>
             <span class="rerun">0 Reruns</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="retried" disabled>
+            <span class="retried">0 Retried,</span>
           </div>
           <div class="collapse">
             <button id="show_all_details">Show all details</button>&nbsp;/&nbsp;<button id="hide_all_details">Hide all details</button>
@@ -106,9 +495,8 @@
         </tr>
       </thead>
     </table>
-  </body>
   <footer>
-    <div id="data-container" data-jsonblob="{&#34;environment&#34;: {&#34;Python&#34;: &#34;3.13.0&#34;, &#34;Platform&#34;: &#34;Windows-10-10.0.19045-SP0&#34;, &#34;Packages&#34;: {&#34;pytest&#34;: &#34;8.3.3&#34;, &#34;pluggy&#34;: &#34;1.5.0&#34;}, &#34;Plugins&#34;: {&#34;html&#34;: &#34;4.1.1&#34;, &#34;metadata&#34;: &#34;3.1.1&#34;}}, &#34;tests&#34;: {&#34;test/test_cart.py::test_agregar_producto_al_carrito&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Failed&#34;, &#34;testId&#34;: &#34;test/test_cart.py::test_agregar_producto_al_carrito&#34;, &#34;duration&#34;: &#34;00:00:12&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Failed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test/test_cart.py::test_agregar_producto_al_carrito&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:12&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;driver = &amp;lt;selenium.webdriver.chrome.webdriver.WebDriver (session=&amp;quot;7dfc24ea06525d0181d3d9e53d936fb7&amp;quot;)&amp;gt;\n\n    def test_agregar_producto_al_carrito(driver):\n        # Arrange: iniciar sesi\u00f3n y acceder al inventario.\n        login_page = LoginPage(driver)\n        login_page.open()\n        login_page.login(&amp;quot;standard_user&amp;quot;, &amp;quot;secret_sauce&amp;quot;)\n    \n        inventory_page = InventoryPage(driver)\n        assert inventory_page.is_loaded()\n    \n        # Guardar el nombre antes de agregar el producto.\n        first_product_name = inventory_page.get_first_product_name()\n    \n        # Act: agregar el primer producto al carrito.\n        inventory_page.add_first_product_to_cart()\n    \n        # Assert: verificar que el contador indique un producto.\n&amp;gt;       assert inventory_page.get_cart_count() == 1\nE       assert 0 == 1\nE        +  where 0 = get_cart_count()\nE        +    where get_cart_count = &amp;lt;pages.inventory_page.InventoryPage object at 0x0000019B129D9400&amp;gt;.get_cart_count\n\ntest\\test_cart.py:23: AssertionError\n--------------------------- Captured stdout teardown ---------------------------\n\nCaptura guardada en: reports\\screenshots\\test_agregar_producto_al_carrito.png\n&#34;}], &#34;test/test_inventory.py::test_navegacion_y_catalogo&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test/test_inventory.py::test_navegacion_y_catalogo&#34;, &#34;duration&#34;: &#34;00:00:10&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test/test_inventory.py::test_navegacion_y_catalogo&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:10&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\nPrimer producto: Sauce Labs Backpack | Precio: $29.99\n&#34;}], &#34;test/test_login.py::test_login_exitoso&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test/test_login.py::test_login_exitoso&#34;, &#34;duration&#34;: &#34;00:00:07&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test/test_login.py::test_login_exitoso&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:07&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}]}, &#34;renderCollapsed&#34;: [&#34;passed&#34;], &#34;initialSort&#34;: &#34;result&#34;, &#34;title&#34;: &#34;reporte.html&#34;}"></div>
+    <div id="data-container" data-jsonblob="{&#34;environment&#34;: {&#34;Python&#34;: &#34;3.14.0&#34;, &#34;Platform&#34;: &#34;Windows-10-10.0.19045-SP0&#34;, &#34;Packages&#34;: {&#34;pytest&#34;: &#34;9.1.1&#34;, &#34;pluggy&#34;: &#34;1.6.0&#34;}, &#34;Plugins&#34;: {&#34;html&#34;: &#34;4.2.0&#34;, &#34;metadata&#34;: &#34;3.1.1&#34;}, &#34;Proyecto&#34;: &#34;TalentoTech QA Automation&#34;, &#34;Aplicaci\u00f3n bajo prueba&#34;: &#34;SauceDemo&#34;, &#34;Lenguaje&#34;: &#34;Python 3.14.0&#34;, &#34;Sistema operativo&#34;: &#34;Windows-10-10.0.19045-SP0&#34;, &#34;Pytest&#34;: &#34;9.1.1&#34;, &#34;Selenium&#34;: &#34;4.50.0&#34;}, &#34;tests&#34;: {&#34;test/test_cart.py::test_agregar_producto_al_carrito&#34;: [{&#34;extras&#34;: [{&#34;name&#34;: &#34;Registro de ejecuci\u00f3n&#34;, &#34;format_type&#34;: &#34;text&#34;, &#34;content&#34;: &#34;data:text/plain;charset=utf-8;base64,WzIyOjQzOjM3XSBQQVNPICB8IEluaWNpYW5kbyBwcnVlYmEgZGVsIGNhcnJpdG8KWzIyOjQzOjM3XSBQQVNPICB8IEFicmllbmRvIFNhdWNlRGVtbwpbMjI6NDM6MzldIE9LICAgIHwgUMOhZ2luYSBkZSBsb2dpbiBhYmllcnRhClsyMjo0MzozOV0gUEFTTyAgfCBJbmdyZXNhbmRvIGNyZWRlbmNpYWxlcwpbMjI6NDM6MzldIE9LICAgIHwgQ3JlZGVuY2lhbGVzIGVudmlhZGFzClsyMjo0MzozOV0gUEFTTyAgfCBWZXJpZmljYW5kbyBxdWUgZWwgaW52ZW50YXJpbyBlc3TDqSBjYXJnYWRvClsyMjo0MzozOV0gT0sgICAgfCBJbnZlbnRhcmlvIGNhcmdhZG8gY29ycmVjdGFtZW50ZQpbMjI6NDM6MzldIFBBU08gIHwgVmVyaWZpY2FuZG8gZWwgZXN0YWRvIGluaWNpYWwgZGVsIGNhcnJpdG8KWzIyOjQzOjM5XSBPSyAgICB8IENvbnRhZG9yIGluaWNpYWwgZGVsIGNhcnJpdG86IDAKWzIyOjQzOjM5XSBQQVNPICB8IE9idGVuaWVuZG8gZWwgbm9tYnJlIGRlbCBwcm9kdWN0bwpbMjI6NDM6MzldIE9LICAgIHwgUHJvZHVjdG8gc2VsZWNjaW9uYWRvOiBTYXVjZSBMYWJzIEJhY2twYWNrClsyMjo0MzozOV0gUEFTTyAgfCBBZ3JlZ2FuZG8gZWwgcHJvZHVjdG8gYWwgY2Fycml0bwpFc3RhZG8gaW5pY2lhbDogQWRkIHRvIGNhcnQKVVJMOiBodHRwczovL3d3dy5zYXVjZWRlbW8uY29tL2ludmVudG9yeS5odG1sCkVsIGNsaWMgbm9ybWFsIGZ1bmNpb27Dsy4KWzIyOjQzOjQwXSBPSyAgICB8IEFjY2nDs24gZGUgYWdyZWdhciBwcm9kdWN0byBjb21wbGV0YWRhClsyMjo0Mzo0MF0gUEFTTyAgfCBWZXJpZmljYW5kbyBlbCBjb250YWRvciBkZWwgY2Fycml0bwpbMjI6NDM6NDBdIE9LICAgIHwgQ29udGFkb3IgZGVsIGNhcnJpdG86IDEKWzIyOjQzOjQwXSBQQVNPICB8IEFicmllbmRvIGxhIHDDoWdpbmEgZGVsIGNhcnJpdG8KWzIyOjQzOjQwXSBPSyAgICB8IFVSTCBkZWwgY2Fycml0bzogaHR0cHM6Ly93d3cuc2F1Y2VkZW1vLmNvbS9jYXJ0Lmh0bWwKWzIyOjQzOjQwXSBQQVNPICB8IFZlcmlmaWNhbmRvIHF1ZSBsYSBww6FnaW5hIGRlbCBjYXJyaXRvIGVzdMOpIGNhcmdhZGEKWzIyOjQzOjQwXSBPSyAgICB8IFTDrXR1bG8gZW5jb250cmFkbzogWW91ciBDYXJ0ClsyMjo0Mzo0MF0gUEFTTyAgfCBCdXNjYW5kbyBlbCBwcm9kdWN0byBkZW50cm8gZGVsIGNhcnJpdG8KRWxlbWVudG9zIGVuY29udHJhZG9zIGVuIGVsIGNhcnJpdG86IDEKWzIyOjQzOjQwXSBPSyAgICB8IFByb2R1Y3RvcyBlbmNvbnRyYWRvcyBlbiBlbCBjYXJyaXRvOiBbJ1NhdWNlIExhYnMgQmFja3BhY2snXQpFbGVtZW50b3MgZW5jb250cmFkb3MgZW4gZWwgY2Fycml0bzogMQpbMjI6NDM6NDBdIE9LICAgIHwgUHJvZHVjdG8gY29uZmlybWFkbyBlbiBlbCBjYXJyaXRvOiBTYXVjZSBMYWJzIEJhY2twYWNrClsyMjo0Mzo0MF0gT0sgICAgfCBQcnVlYmEgZGVsIGNhcnJpdG8gZmluYWxpemFkYSBjb3JyZWN0YW1lbnRlCg==&#34;, &#34;mime_type&#34;: &#34;text/plain&#34;, &#34;extension&#34;: &#34;txt&#34;}], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test/test_cart.py::test_agregar_producto_al_carrito&#34;, &#34;duration&#34;: &#34;00:00:12&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test/test_cart.py::test_agregar_producto_al_carrito&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:12&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;a target=\&#34;_blank\&#34; href=\&#34;data:text/plain;charset=utf-8;base64,WzIyOjQzOjM3XSBQQVNPICB8IEluaWNpYW5kbyBwcnVlYmEgZGVsIGNhcnJpdG8KWzIyOjQzOjM3XSBQQVNPICB8IEFicmllbmRvIFNhdWNlRGVtbwpbMjI6NDM6MzldIE9LICAgIHwgUMOhZ2luYSBkZSBsb2dpbiBhYmllcnRhClsyMjo0MzozOV0gUEFTTyAgfCBJbmdyZXNhbmRvIGNyZWRlbmNpYWxlcwpbMjI6NDM6MzldIE9LICAgIHwgQ3JlZGVuY2lhbGVzIGVudmlhZGFzClsyMjo0MzozOV0gUEFTTyAgfCBWZXJpZmljYW5kbyBxdWUgZWwgaW52ZW50YXJpbyBlc3TDqSBjYXJnYWRvClsyMjo0MzozOV0gT0sgICAgfCBJbnZlbnRhcmlvIGNhcmdhZG8gY29ycmVjdGFtZW50ZQpbMjI6NDM6MzldIFBBU08gIHwgVmVyaWZpY2FuZG8gZWwgZXN0YWRvIGluaWNpYWwgZGVsIGNhcnJpdG8KWzIyOjQzOjM5XSBPSyAgICB8IENvbnRhZG9yIGluaWNpYWwgZGVsIGNhcnJpdG86IDAKWzIyOjQzOjM5XSBQQVNPICB8IE9idGVuaWVuZG8gZWwgbm9tYnJlIGRlbCBwcm9kdWN0bwpbMjI6NDM6MzldIE9LICAgIHwgUHJvZHVjdG8gc2VsZWNjaW9uYWRvOiBTYXVjZSBMYWJzIEJhY2twYWNrClsyMjo0MzozOV0gUEFTTyAgfCBBZ3JlZ2FuZG8gZWwgcHJvZHVjdG8gYWwgY2Fycml0bwpFc3RhZG8gaW5pY2lhbDogQWRkIHRvIGNhcnQKVVJMOiBodHRwczovL3d3dy5zYXVjZWRlbW8uY29tL2ludmVudG9yeS5odG1sCkVsIGNsaWMgbm9ybWFsIGZ1bmNpb27Dsy4KWzIyOjQzOjQwXSBPSyAgICB8IEFjY2nDs24gZGUgYWdyZWdhciBwcm9kdWN0byBjb21wbGV0YWRhClsyMjo0Mzo0MF0gUEFTTyAgfCBWZXJpZmljYW5kbyBlbCBjb250YWRvciBkZWwgY2Fycml0bwpbMjI6NDM6NDBdIE9LICAgIHwgQ29udGFkb3IgZGVsIGNhcnJpdG86IDEKWzIyOjQzOjQwXSBQQVNPICB8IEFicmllbmRvIGxhIHDDoWdpbmEgZGVsIGNhcnJpdG8KWzIyOjQzOjQwXSBPSyAgICB8IFVSTCBkZWwgY2Fycml0bzogaHR0cHM6Ly93d3cuc2F1Y2VkZW1vLmNvbS9jYXJ0Lmh0bWwKWzIyOjQzOjQwXSBQQVNPICB8IFZlcmlmaWNhbmRvIHF1ZSBsYSBww6FnaW5hIGRlbCBjYXJyaXRvIGVzdMOpIGNhcmdhZGEKWzIyOjQzOjQwXSBPSyAgICB8IFTDrXR1bG8gZW5jb250cmFkbzogWW91ciBDYXJ0ClsyMjo0Mzo0MF0gUEFTTyAgfCBCdXNjYW5kbyBlbCBwcm9kdWN0byBkZW50cm8gZGVsIGNhcnJpdG8KRWxlbWVudG9zIGVuY29udHJhZG9zIGVuIGVsIGNhcnJpdG86IDEKWzIyOjQzOjQwXSBPSyAgICB8IFByb2R1Y3RvcyBlbmNvbnRyYWRvcyBlbiBlbCBjYXJyaXRvOiBbJ1NhdWNlIExhYnMgQmFja3BhY2snXQpFbGVtZW50b3MgZW5jb250cmFkb3MgZW4gZWwgY2Fycml0bzogMQpbMjI6NDM6NDBdIE9LICAgIHwgUHJvZHVjdG8gY29uZmlybWFkbyBlbiBlbCBjYXJyaXRvOiBTYXVjZSBMYWJzIEJhY2twYWNrClsyMjo0Mzo0MF0gT0sgICAgfCBQcnVlYmEgZGVsIGNhcnJpdG8gZmluYWxpemFkYSBjb3JyZWN0YW1lbnRlCg==\&#34; class=\&#34;col-links__extra text\&#34;&gt;Registro de ejecuci\u00f3n&lt;/a&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\n[22:43:37] PASO  | Iniciando prueba del carrito\n[22:43:37] PASO  | Abriendo SauceDemo\n[22:43:39] OK    | P\u00e1gina de login abierta\n[22:43:39] PASO  | Ingresando credenciales\n[22:43:39] OK    | Credenciales enviadas\n[22:43:39] PASO  | Verificando que el inventario est\u00e9 cargado\n[22:43:39] OK    | Inventario cargado correctamente\n[22:43:39] PASO  | Verificando el estado inicial del carrito\n[22:43:39] OK    | Contador inicial del carrito: 0\n[22:43:39] PASO  | Obteniendo el nombre del producto\n[22:43:39] OK    | Producto seleccionado: Sauce Labs Backpack\n[22:43:39] PASO  | Agregando el producto al carrito\nEstado inicial: Add to cart\nURL: https://www.saucedemo.com/inventory.html\nEl clic normal funcion\u00f3.\n[22:43:40] OK    | Acci\u00f3n de agregar producto completada\n[22:43:40] PASO  | Verificando el contador del carrito\n[22:43:40] OK    | Contador del carrito: 1\n[22:43:40] PASO  | Abriendo la p\u00e1gina del carrito\n[22:43:40] OK    | URL del carrito: https://www.saucedemo.com/cart.html\n[22:43:40] PASO  | Verificando que la p\u00e1gina del carrito est\u00e9 cargada\n[22:43:40] OK    | T\u00edtulo encontrado: Your Cart\n[22:43:40] PASO  | Buscando el producto dentro del carrito\nElementos encontrados en el carrito: 1\n[22:43:40] OK    | Productos encontrados en el carrito: [&amp;#x27;Sauce Labs Backpack&amp;#x27;]\nElementos encontrados en el carrito: 1\n[22:43:40] OK    | Producto confirmado en el carrito: Sauce Labs Backpack\n[22:43:40] OK    | Prueba del carrito finalizada correctamente\n&#34;}], &#34;test/test_inventory.py::test_navegacion_y_catalogo&#34;: [{&#34;extras&#34;: [{&#34;name&#34;: &#34;Registro de ejecuci\u00f3n&#34;, &#34;format_type&#34;: &#34;text&#34;, &#34;content&#34;: &#34;data:text/plain;charset=utf-8;base64,WzIyOjQzOjQ1XSBQQVNPICB8IEluaWNpYW5kbyBwcnVlYmEgZGUgbmF2ZWdhY2nDs24geSBjYXTDoWxvZ28KWzIyOjQzOjQ1XSBQQVNPICB8IEFicmllbmRvIGxhIHDDoWdpbmEgZGUgU2F1Y2VEZW1vClsyMjo0Mzo0Nl0gT0sgICAgfCBQw6FnaW5hIGRlIGxvZ2luIGFiaWVydGEKWzIyOjQzOjQ2XSBQQVNPICB8IEluZ3Jlc2FuZG8gY3JlZGVuY2lhbGVzClsyMjo0Mzo0Nl0gT0sgICAgfCBDcmVkZW5jaWFsZXMgZW52aWFkYXMKWzIyOjQzOjQ2XSBQQVNPICB8IFZlcmlmaWNhbmRvIHF1ZSBlbCBpbnZlbnRhcmlvIGVzdMOpIGNhcmdhZG8KWzIyOjQzOjQ2XSBPSyAgICB8IFTDrXR1bG8gZW5jb250cmFkbzogUHJvZHVjdHMKWzIyOjQzOjQ2XSBQQVNPICB8IEJ1c2NhbmRvIHByb2R1Y3RvcyBlbiBlbCBjYXTDoWxvZ28KWzIyOjQzOjQ2XSBPSyAgICB8IFByb2R1Y3RvcyBlbmNvbnRyYWRvczogNgpbMjI6NDM6NDZdIFBBU08gIHwgQ29uc3VsdGFuZG8gZWwgcHJpbWVyIHByb2R1Y3RvClsyMjo0Mzo0N10gT0sgICAgfCBOb21icmUgZW5jb250cmFkbzogU2F1Y2UgTGFicyBCYWNrcGFjawpbMjI6NDM6NDddIE9LICAgIHwgUHJlY2lvIGVuY29udHJhZG86ICQyOS45OQpbMjI6NDM6NDddIFBBU08gIHwgVmVyaWZpY2FuZG8gbG9zIGNvbnRyb2xlcyBkZWwgaW52ZW50YXJpbwpbMjI6NDM6NDddIE9LICAgIHwgTWVuw7ogZGUgbmF2ZWdhY2nDs24gdmlzaWJsZQpbMjI6NDM6NDddIE9LICAgIHwgRmlsdHJvIGRlIG9yZGVuYW1pZW50byB2aXNpYmxlClsyMjo0Mzo0N10gT0sgICAgfCBQcnVlYmEgZGUgaW52ZW50YXJpbyBmaW5hbGl6YWRhIGNvcnJlY3RhbWVudGUK&#34;, &#34;mime_type&#34;: &#34;text/plain&#34;, &#34;extension&#34;: &#34;txt&#34;}], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test/test_inventory.py::test_navegacion_y_catalogo&#34;, &#34;duration&#34;: &#34;00:00:07&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test/test_inventory.py::test_navegacion_y_catalogo&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:07&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;a target=\&#34;_blank\&#34; href=\&#34;data:text/plain;charset=utf-8;base64,WzIyOjQzOjQ1XSBQQVNPICB8IEluaWNpYW5kbyBwcnVlYmEgZGUgbmF2ZWdhY2nDs24geSBjYXTDoWxvZ28KWzIyOjQzOjQ1XSBQQVNPICB8IEFicmllbmRvIGxhIHDDoWdpbmEgZGUgU2F1Y2VEZW1vClsyMjo0Mzo0Nl0gT0sgICAgfCBQw6FnaW5hIGRlIGxvZ2luIGFiaWVydGEKWzIyOjQzOjQ2XSBQQVNPICB8IEluZ3Jlc2FuZG8gY3JlZGVuY2lhbGVzClsyMjo0Mzo0Nl0gT0sgICAgfCBDcmVkZW5jaWFsZXMgZW52aWFkYXMKWzIyOjQzOjQ2XSBQQVNPICB8IFZlcmlmaWNhbmRvIHF1ZSBlbCBpbnZlbnRhcmlvIGVzdMOpIGNhcmdhZG8KWzIyOjQzOjQ2XSBPSyAgICB8IFTDrXR1bG8gZW5jb250cmFkbzogUHJvZHVjdHMKWzIyOjQzOjQ2XSBQQVNPICB8IEJ1c2NhbmRvIHByb2R1Y3RvcyBlbiBlbCBjYXTDoWxvZ28KWzIyOjQzOjQ2XSBPSyAgICB8IFByb2R1Y3RvcyBlbmNvbnRyYWRvczogNgpbMjI6NDM6NDZdIFBBU08gIHwgQ29uc3VsdGFuZG8gZWwgcHJpbWVyIHByb2R1Y3RvClsyMjo0Mzo0N10gT0sgICAgfCBOb21icmUgZW5jb250cmFkbzogU2F1Y2UgTGFicyBCYWNrcGFjawpbMjI6NDM6NDddIE9LICAgIHwgUHJlY2lvIGVuY29udHJhZG86ICQyOS45OQpbMjI6NDM6NDddIFBBU08gIHwgVmVyaWZpY2FuZG8gbG9zIGNvbnRyb2xlcyBkZWwgaW52ZW50YXJpbwpbMjI6NDM6NDddIE9LICAgIHwgTWVuw7ogZGUgbmF2ZWdhY2nDs24gdmlzaWJsZQpbMjI6NDM6NDddIE9LICAgIHwgRmlsdHJvIGRlIG9yZGVuYW1pZW50byB2aXNpYmxlClsyMjo0Mzo0N10gT0sgICAgfCBQcnVlYmEgZGUgaW52ZW50YXJpbyBmaW5hbGl6YWRhIGNvcnJlY3RhbWVudGUK\&#34; class=\&#34;col-links__extra text\&#34;&gt;Registro de ejecuci\u00f3n&lt;/a&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\n[22:43:45] PASO  | Iniciando prueba de navegaci\u00f3n y cat\u00e1logo\n[22:43:45] PASO  | Abriendo la p\u00e1gina de SauceDemo\n[22:43:46] OK    | P\u00e1gina de login abierta\n[22:43:46] PASO  | Ingresando credenciales\n[22:43:46] OK    | Credenciales enviadas\n[22:43:46] PASO  | Verificando que el inventario est\u00e9 cargado\n[22:43:46] OK    | T\u00edtulo encontrado: Products\n[22:43:46] PASO  | Buscando productos en el cat\u00e1logo\n[22:43:46] OK    | Productos encontrados: 6\n[22:43:46] PASO  | Consultando el primer producto\n[22:43:47] OK    | Nombre encontrado: Sauce Labs Backpack\n[22:43:47] OK    | Precio encontrado: $29.99\n[22:43:47] PASO  | Verificando los controles del inventario\n[22:43:47] OK    | Men\u00fa de navegaci\u00f3n visible\n[22:43:47] OK    | Filtro de ordenamiento visible\n[22:43:47] OK    | Prueba de inventario finalizada correctamente\n&#34;}], &#34;test/test_login.py::test_login_exitoso&#34;: [{&#34;extras&#34;: [{&#34;name&#34;: &#34;Registro de ejecuci\u00f3n&#34;, &#34;format_type&#34;: &#34;text&#34;, &#34;content&#34;: &#34;data:text/plain;charset=utf-8;base64,WzIyOjQzOjUyXSBQQVNPICB8IEluaWNpYW5kbyBwcnVlYmEgZGUgaW5pY2lvIGRlIHNlc2nDs24KWzIyOjQzOjUyXSBQQVNPICB8IEFicmllbmRvIGxhIHDDoWdpbmEgZGUgU2F1Y2VEZW1vClsyMjo0Mzo1M10gT0sgICAgfCBQw6FnaW5hIGRlIGxvZ2luIGFiaWVydGEKWzIyOjQzOjUzXSBQQVNPICB8IEluZ3Jlc2FuZG8gY3JlZGVuY2lhbGVzIGRlIHVzdWFyaW8KWzIyOjQzOjUzXSBPSyAgICB8IENyZWRlbmNpYWxlcyBlbnZpYWRhcwpbMjI6NDM6NTNdIFBBU08gIHwgRXNwZXJhbmRvIGxhIHJlZGlyZWNjacOzbiBhbCBpbnZlbnRhcmlvClsyMjo0Mzo1M10gT0sgICAgfCBVUkwgZW5jb250cmFkYTogaHR0cHM6Ly93d3cuc2F1Y2VkZW1vLmNvbS9pbnZlbnRvcnkuaHRtbApbMjI6NDM6NTNdIFBBU08gIHwgVmVyaWZpY2FuZG8gZWwgdMOtdHVsbyBkZWwgaW52ZW50YXJpbwpbMjI6NDM6NTNdIE9LICAgIHwgVMOtdHVsbyBlbmNvbnRyYWRvOiBQcm9kdWN0cwpbMjI6NDM6NTNdIFBBU08gIHwgVmVyaWZpY2FuZG8gZWwgbm9tYnJlIGRlIGxhIGFwbGljYWNpw7NuClsyMjo0Mzo1M10gT0sgICAgfCBOb21icmUgZGUgYXBsaWNhY2nDs24gZW5jb250cmFkbzogU3dhZyBMYWJzClsyMjo0Mzo1M10gT0sgICAgfCBQcnVlYmEgZGUgaW5pY2lvIGRlIHNlc2nDs24gZmluYWxpemFkYSBjb3JyZWN0YW1lbnRlCg==&#34;, &#34;mime_type&#34;: &#34;text/plain&#34;, &#34;extension&#34;: &#34;txt&#34;}], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test/test_login.py::test_login_exitoso&#34;, &#34;duration&#34;: &#34;00:00:06&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test/test_login.py::test_login_exitoso&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:06&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;a target=\&#34;_blank\&#34; href=\&#34;data:text/plain;charset=utf-8;base64,WzIyOjQzOjUyXSBQQVNPICB8IEluaWNpYW5kbyBwcnVlYmEgZGUgaW5pY2lvIGRlIHNlc2nDs24KWzIyOjQzOjUyXSBQQVNPICB8IEFicmllbmRvIGxhIHDDoWdpbmEgZGUgU2F1Y2VEZW1vClsyMjo0Mzo1M10gT0sgICAgfCBQw6FnaW5hIGRlIGxvZ2luIGFiaWVydGEKWzIyOjQzOjUzXSBQQVNPICB8IEluZ3Jlc2FuZG8gY3JlZGVuY2lhbGVzIGRlIHVzdWFyaW8KWzIyOjQzOjUzXSBPSyAgICB8IENyZWRlbmNpYWxlcyBlbnZpYWRhcwpbMjI6NDM6NTNdIFBBU08gIHwgRXNwZXJhbmRvIGxhIHJlZGlyZWNjacOzbiBhbCBpbnZlbnRhcmlvClsyMjo0Mzo1M10gT0sgICAgfCBVUkwgZW5jb250cmFkYTogaHR0cHM6Ly93d3cuc2F1Y2VkZW1vLmNvbS9pbnZlbnRvcnkuaHRtbApbMjI6NDM6NTNdIFBBU08gIHwgVmVyaWZpY2FuZG8gZWwgdMOtdHVsbyBkZWwgaW52ZW50YXJpbwpbMjI6NDM6NTNdIE9LICAgIHwgVMOtdHVsbyBlbmNvbnRyYWRvOiBQcm9kdWN0cwpbMjI6NDM6NTNdIFBBU08gIHwgVmVyaWZpY2FuZG8gZWwgbm9tYnJlIGRlIGxhIGFwbGljYWNpw7NuClsyMjo0Mzo1M10gT0sgICAgfCBOb21icmUgZGUgYXBsaWNhY2nDs24gZW5jb250cmFkbzogU3dhZyBMYWJzClsyMjo0Mzo1M10gT0sgICAgfCBQcnVlYmEgZGUgaW5pY2lvIGRlIHNlc2nDs24gZmluYWxpemFkYSBjb3JyZWN0YW1lbnRlCg==\&#34; class=\&#34;col-links__extra text\&#34;&gt;Registro de ejecuci\u00f3n&lt;/a&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;----------------------------- Captured stdout call -----------------------------\n[22:43:52] PASO  | Iniciando prueba de inicio de sesi\u00f3n\n[22:43:52] PASO  | Abriendo la p\u00e1gina de SauceDemo\n[22:43:53] OK    | P\u00e1gina de login abierta\n[22:43:53] PASO  | Ingresando credenciales de usuario\n[22:43:53] OK    | Credenciales enviadas\n[22:43:53] PASO  | Esperando la redirecci\u00f3n al inventario\n[22:43:53] OK    | URL encontrada: https://www.saucedemo.com/inventory.html\n[22:43:53] PASO  | Verificando el t\u00edtulo del inventario\n[22:43:53] OK    | T\u00edtulo encontrado: Products\n[22:43:53] PASO  | Verificando el nombre de la aplicaci\u00f3n\n[22:43:53] OK    | Nombre de aplicaci\u00f3n encontrado: Swag Labs\n[22:43:53] OK    | Prueba de inicio de sesi\u00f3n finalizada correctamente\n&#34;}]}, &#34;renderCollapsed&#34;: [&#34;passed&#34;], &#34;initialSort&#34;: &#34;result&#34;, &#34;title&#34;: &#34;QA Automation | Reporte de ejecuci\u00f3n&#34;}"></div>
     <script>
       (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 const { getCollapsedCategory, setCollapsedIds } = require('./storage.js')
@@ -236,10 +624,10 @@ const dom = {
         }
 
         if (collapsed) {
-            resultBody.querySelector('.collapsible > td')?.classList.add('collapsed')
+            resultBody.querySelector('.collapsible > .col-result')?.classList.add('collapsed')
             resultBody.querySelector('.extras-row').classList.add('hidden')
         } else {
-            resultBody.querySelector('.collapsible > td')?.classList.remove('collapsed')
+            resultBody.querySelector('.collapsible > .col-result')?.classList.remove('collapsed')
         }
 
         const media = []
@@ -767,4 +1155,5 @@ module.exports = {
 },{}]},{},[4]);
     </script>
   </footer>
+  </body>
 </html>

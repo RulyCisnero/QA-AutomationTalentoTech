@@ -1,0 +1,57 @@
+
+/* Identidad visual del reporte */
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: #1e293b;
+    background: #f4f7fb;
+}
+
+/* Encabezados */
+h1, h2, h3 {
+    color: #172554;
+    letter-spacing: -0.3px;
+}
+
+/* Tablas */
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+th {
+    background: #172554 !important;
+    color: #ffffff !important;
+    padding: 12px !important;
+}
+
+td {
+    padding: 10px !important;
+}
+
+/* Filas */
+tr:hover td {
+    background-color: #f1f5f9;
+}
+
+/* Enlaces */
+a {
+    color: #2563eb;
+    font-weight: 600;
+}
+
+/* Secciones */
+#environment,
+#summary,
+#results-table {
+    margin-bottom: 24px;
+}
+
+/* Mejor lectura de los detalles */
+pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    border-radius: 8px;
+    padding: 12px;
+}
