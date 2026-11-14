@@ -12,7 +12,7 @@ La suite combina pruebas de interfaz sobre [SauceDemo](https://www.saucedemo.com
 - Consumir una API REST y validar respuestas de distintos métodos HTTP.
 - Separar la interacción con la interfaz de la lógica de los tests mediante POM.
 - Utilizar datos externos para parametrizar pruebas.
-- Generar reportes HTML con resultados, duración, logs y evidencias de fallos.
+- Generar reportes HTML personalizados con indicadores, gráficos de resultados, duración, logs y evidencias de fallos.
 - Mantener una estructura organizada que permita ampliar la suite.
 
 ## Tecnologías utilizadas
@@ -187,6 +187,9 @@ reports/reporte.html
 
 Abrir ese archivo con un navegador para consultar:
 
+- Dashboard visual con métricas generales y gráficos dinámicos según los resultados de la ejecución.
+- Comparación de resultados entre las suites UI y API.
+- Tabla de pruebas con clasificación por suite y descripción del caso.
 - Tests ejecutados y su estado (Passed / Failed).
 - Duración de cada test.
 - Logs de los pasos y validaciones registrados durante la ejecución.
