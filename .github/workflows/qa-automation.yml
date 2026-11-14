@@ -1,0 +1,59 @@
+name: QA Automation Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  automated-tests:
+    name: UI and API test suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: PreEntrega/requirements.txt
+
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install dependencies
+        working-directory: PreEntrega
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Run UI and API tests
+        working-directory: PreEntrega
+        env:
+          CI: 'true'
+        run: |
+          python -m pytest test -v --capture=tee-sys --html=reports/reporte.html --self-contained-html
+
+      - name: Upload HTML report and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-automation-report
+          path: |
+            PreEntrega/reports/reporte.html
+            PreEntrega/reports/screenshots/
+          if-no-files-found: warn
+          retention-days: 14
