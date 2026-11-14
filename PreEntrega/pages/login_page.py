@@ -12,6 +12,7 @@ class LoginPage:
     USERNAME_INPUT = (By.ID, "user-name")
     PASSWORD_INPUT = (By.ID, "password")
     LOGIN_BUTTON = (By.ID, "login-button")
+    ERROR_MESSAGE = (By.CSS_SELECTOR, "[data-test='error']")
 
     def __init__(self, driver: WebDriver):
         self.driver = driver
@@ -33,3 +34,7 @@ class LoginPage:
         password_input.send_keys(password)
 
         wait_for_clickable(self.driver, self.LOGIN_BUTTON).click()
+        
+    def get_error_message(self) -> str:
+        """Obtiene el mensaje de error del inicio de sesión."""
+        return wait_for_visible(self.driver, self.ERROR_MESSAGE).text
