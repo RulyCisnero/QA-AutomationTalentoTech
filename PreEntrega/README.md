@@ -1,42 +1,71 @@
 # QA Automation - TalentoTech
 
-Proyecto de automatización de pruebas web desarrollado con **Python, Selenium WebDriver y Pytest**, como parte de la formación en QA Automation de TalentoTech.
+Proyecto de automatización de pruebas funcionales **UI y API**, desarrollado con Python y Pytest en el marco de la formación QA Automation de TalentoTech.
 
-El proyecto utiliza [SauceDemo](https://www.saucedemo.com/) como aplicación bajo prueba y aplica una estructura basada en Page Object Model (POM) para separar la interacción con las páginas de los casos de prueba.
+La suite combina pruebas de interfaz sobre [SauceDemo](https://www.saucedemo.com/) mediante Selenium WebDriver y pruebas de servicios REST sobre [Restful-Booker](https://restful-booker.herokuapp.com/) mediante Requests. La arquitectura utiliza Page Object Model (POM) para las pruebas UI y separa clientes, endpoints y casos de prueba para las pruebas API.
 
 ## Objetivos
 
-- Automatizar escenarios básicos de navegación web.
-- Validar el inicio de sesión con credenciales válidas.
-- Comprobar la visualización del catálogo de productos.
-- Verificar la incorporación de productos al carrito.
-- Utilizar esperas explícitas para sincronizar las interacciones.
-- Generar reportes HTML con los resultados de ejecución.
-- Registrar evidencias para facilitar el diagnóstico de fallos.
+- Automatizar flujos funcionales de una aplicación web.
+- Validar escenarios positivos y negativos de inicio de sesión.
+- Comprobar navegación, catálogo, carrito y finalización de compra.
+- Consumir una API REST y validar respuestas de distintos métodos HTTP.
+- Separar la interacción con la interfaz de la lógica de los tests mediante POM.
+- Utilizar datos externos para parametrizar pruebas.
+- Generar reportes HTML con resultados, duración, logs y evidencias de fallos.
+- Mantener una estructura organizada que permita ampliar la suite.
 
 ## Tecnologías utilizadas
 
-- **Python:** lenguaje de programación.
-- **Selenium WebDriver:** automatización del navegador.
-- **Pytest:** ejecución y organización de pruebas.
-- **pytest-html:** generación de reportes HTML.
-- **Google Chrome:** navegador utilizado para las pruebas.
-- **Git y GitHub:** control de versiones y alojamiento del proyecto.
+| Tecnología | Uso |
+|---|---|
+| Python | Lenguaje de programación |
+| Pytest | Ejecución, organización y parametrización de pruebas |
+| Selenium WebDriver | Automatización de la interfaz web |
+| Requests | Envío de solicitudes HTTP a la API |
+| pytest-html | Generación de reportes HTML |
+| pytest-metadata | Metadatos del entorno en el reporte |
+| Google Chrome | Navegador utilizado en las pruebas UI |
+| Git y GitHub | Control de versiones y alojamiento del proyecto |
+
+## Aplicaciones bajo prueba
+
+- **SauceDemo:** aplicación web de demostración para validar flujos de usuario.
+- **Restful-Booker:** API pública de demostración para gestionar reservas.
 
 ## Estructura del proyecto
 
+La carpeta del proyecto ejecutable es `PreEntrega/`:
+
 ```text
 PreEntrega/
+├── api/
+│   ├── clients/
+│   │   └── api_client.py
+│   └── endpoints/
+│       ├── auth.py
+│       └── bookings.py
 ├── pages/
 │   ├── login_page.py
 │   ├── inventory_page.py
-│   └── cart_page.py
+│   ├── cart_page.py
+│   ├── checkout_page.py
+│   └── checkout_Overview_page.py
 ├── test/
-│   ├── test_login.py
-│   ├── test_inventory.py
-│   └── test_cart.py
+│   ├── api/
+│   │   └── test_bookings.py
+│   └── ui/
+│       ├── test_login.py
+│       ├── test_login_negative.py
+│       ├── test_inventory.py
+│       ├── test_cart.py
+│       └── test_checkout.py
+├── test_data/
+│   ├── login_data.json
+│   └── users_data.json
 ├── utils/
 │   ├── driver_factory.py
+│   ├── logger.py
 │   └── waits.py
 ├── reports/
 │   └── screenshots/
@@ -46,22 +75,34 @@ PreEntrega/
 └── README.md
 ```
 
-*La estructura representa la organización prevista del proyecto. Los archivos `__init__.py` pueden estar presentes según la configuración local.*
+## Casos automatizados
 
-## Casos de prueba
+### Pruebas UI - SauceDemo
 
-| Test | Validaciones principales |
+| Caso | Validaciones principales |
 |---|---|
-| Login | Inicio de sesión y acceso al inventario. |
-| Inventario | Título, presencia de productos, nombres, precios y elementos de navegación. |
-| Carrito | Agregado de producto, actualización del contador y presencia del producto en el carrito. |
+| Inicio de sesión exitoso | Acceso con credenciales válidas y visualización del inventario |
+| Inicio de sesión negativo | Rechazo de credenciales inválidas; escenarios parametrizados con datos JSON |
+| Inventario | Carga del catálogo, información de productos, navegación y opciones de ordenamiento |
+| Carrito | Estado inicial, agregado de producto, contador y producto incorporado |
+| Finalización de compra | Recorrido desde el inventario y carrito hasta el flujo de checkout |
+
+Los escenarios negativos de login se parametrizan utilizando datos externos almacenados en `test_data/login_data.json`.
+
+### Pruebas API - Restful-Booker
+
+| Método | Caso | Validaciones principales |
+|---|---|---|
+| GET | Obtener reservas | Código HTTP, estructura JSON y contenido de la respuesta |
+| POST | Crear reserva | Código HTTP, identificador generado y datos devueltos |
+| DELETE | Eliminar reserva | Autenticación, eliminación de la reserva y verificación posterior |
 
 ## Requisitos previos
 
 - Python instalado.
-- Google Chrome instalado.
+- Google Chrome instalado para ejecutar las pruebas UI.
 - Git instalado.
-- Acceso a internet para ingresar a SauceDemo e instalar las dependencias.
+- Conexión a internet para acceder a SauceDemo y Restful-Booker.
 
 ## Instalación
 
@@ -72,15 +113,16 @@ git clone https://github.com/RulyCisnero/QA-AutomationTalentoTech.git
 cd QA-AutomationTalentoTech
 ```
 
-Crear un entorno virtual:
+Ingresar a la carpeta del proyecto:
 
 ```bash
-python -m venv .venv
+cd PreEntrega
 ```
 
-Activarlo en Windows PowerShell:
+Crear y activar un entorno virtual en Windows PowerShell:
 
 ```powershell
+python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 ```
 
@@ -92,59 +134,98 @@ python -m pip install -r requirements.txt
 
 ## Ejecución de las pruebas
 
-Ejecutar todos los tests:
+Todos los comandos de esta sección se ejecutan desde la carpeta `PreEntrega/`.
 
-```bash
-python -m pytest -v
+### Ejecutar toda la suite y ver los logs en consola
+
+```powershell
+python -m pytest test -v --capture=tee-sys
 ```
 
-Ejecutar un caso específico:
+### Ejecutar únicamente las pruebas UI
 
-```bash
-python -m pytest test/test_login.py -v -s
+```powershell
+python -m pytest test/ui -v --capture=tee-sys
 ```
 
-```bash
-python -m pytest test/test_inventory.py -v -s
+### Ejecutar únicamente las pruebas API
+
+```powershell
+python -m pytest test/api -v --capture=tee-sys
 ```
 
-```bash
-python -m pytest test/test_cart.py -v -s
+### Generar el reporte HTML y mostrar los logs en consola simultáneamente
+
+Este es el comando recomendado para la ejecución completa:
+
+```powershell
+python -m pytest test -v --capture=tee-sys --html=reports/reporte.html --self-contained-html
 ```
 
-El parámetro `-v` muestra el resultado detallado de cada test y `-s` permite visualizar los mensajes `print()` utilizados para seguir la ejecución.
+- `-v`: muestra cada test y su resultado detallado.
+- `--capture=tee-sys`: captura la salida de los tests para el reporte y también la muestra en la consola.
+- `--html=reports/reporte.html`: genera el reporte HTML en la carpeta `reports/`.
+- `--self-contained-html`: genera un reporte autocontenido, con sus recursos integrados.
 
-## Reporte HTML
+Con esta configuración se pueden consultar los pasos registrados por el logger tanto durante la ejecución en consola como dentro del reporte HTML.
 
+### Ejecutar un archivo específico
 
-Para generar un reporte HTML de la ejecución:
+Ejemplo para ejecutar las pruebas de carrito:
 
-```bash
-python -m pytest -v --html=reports/reporte.html --self-contained-html
+```powershell
+python -m pytest test/ui/test_cart.py -v --capture=tee-sys
 ```
 
-El archivo generado estará en `reports/reporte.html` y podrá abrirse con un navegador.
+## Reportes y evidencias
 
-## Evidencias de ejecución
+El reporte se genera en:
 
-Las capturas de pantalla permiten documentar el estado del navegador cuando se detectan errores. El directorio destinado a estas evidencias es:
+```text
+reports/reporte.html
+```
+
+Abrir ese archivo con un navegador para consultar:
+
+- Tests ejecutados y su estado (Passed / Failed).
+- Duración de cada test.
+- Logs de los pasos y validaciones registrados durante la ejecución.
+- Capturas de pantalla adjuntas cuando falla una prueba UI.
+
+### Capturas automáticas
+
+Cuando falla un test que utiliza el navegador, se guarda una captura en:
 
 ```text
 reports/screenshots/
 ```
 
-## Credenciales de prueba
+Los nombres de archivo incluyen el nombre del test y la fecha y hora de generación. Por ejemplo:
 
-Para los escenarios de inicio de sesión se utilizan las credenciales de demostración publicadas por SauceDemo:
+```text
+test_finalizar_compra_20261113_231352.png
+```
+
+La captura también se incorpora al reporte HTML para facilitar el análisis del estado de la aplicación al momento del fallo. Los tests API no requieren abrir un navegador y, por lo tanto, no generan capturas de pantalla.
+
+## Registro de logs
+
+El módulo `utils/logger.py` proporciona funciones para registrar:
+
+- `log_step()`: pasos realizados durante la prueba.
+- `log_success()`: validaciones o acciones completadas correctamente.
+- `log_error()`: errores detectados.
+
+Los mensajes incluyen una marca horaria para facilitar el seguimiento de la ejecución y el diagnóstico de fallos.
+
+## Credenciales de demostración
+
+Para los escenarios de login de SauceDemo se utilizan las credenciales públicas de demostración:
 
 - Usuario: `standard_user`
 - Contraseña: `secret_sauce`
 
-Estas credenciales corresponden al entorno de demostración y no deben confundirse con credenciales de aplicaciones reales.
-
-## Aprendizajes
-
-Este proyecto permite practicar la automatización web, el uso de localizadores, las esperas explícitas, la organización de pruebas con Pytest y el diagnóstico de errores durante las interacciones con el navegador.
+No se utilizan credenciales personales ni de aplicaciones reales.
 
 ## Autor
 
