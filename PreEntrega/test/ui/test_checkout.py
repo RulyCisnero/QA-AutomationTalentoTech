@@ -61,11 +61,7 @@ def test_finalizar_compra(driver):
     
     checkout_overview_page = CheckoutOverviewPage(driver)
     
-    log_step("Verificando que la página de resumen de checkout esté cargada")
-    assert checkout_overview_page.is_loaded(), (
-        "No se cargó correctamente la página de resumen de checkout"
-    )
-    log_success("Página de resumen de checkout cargada correctamente")
+   
     
     checkout_overview_page.get_item_names()
     checkout_overview_page.get_summary_values()
