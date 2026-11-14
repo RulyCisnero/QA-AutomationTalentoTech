@@ -143,6 +143,7 @@ def capture_screenshot_on_failure(request):
 
 
 def pytest_configure(config):
+    Path("reports").mkdir(parents=True, exist_ok=True)
     metadata = config.stash[metadata_key]
 
     metadata["Proyecto"] = "TalentoTech QA Automation"
