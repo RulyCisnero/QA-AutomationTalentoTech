@@ -11,6 +11,7 @@ class CartPage:
     PAGE_TITLE = (By.CLASS_NAME, "title")
     CART_ITEMS = (By.CLASS_NAME, "cart_item")
     CART_ITEM_NAMES = (By.CLASS_NAME, "inventory_item_name")
+    CART_CHECKOUT_BUTTON = (By.ID, "checkout")
 
     def __init__(self, driver: WebDriver):
         self.driver = driver
@@ -30,3 +31,7 @@ class CartPage:
     def contains_product(self, product_name: str) -> bool:
         """Comprueba si un producto está presente en el carrito."""
         return product_name in self.get_item_names()
+    
+    def click_checkout(self):
+        """Hace clic en el botón de checkout."""
+        wait_for_visible(self.driver, self.CART_CHECKOUT_BUTTON).click()
