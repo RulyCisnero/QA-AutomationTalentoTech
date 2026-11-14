@@ -237,3 +237,30 @@ No se utilizan credenciales personales ni de aplicaciones reales.
 Proyecto desarrollado en el marco de la formación en QA Automation de TalentoTech.
 
 Repositorio: [QA-AutomationTalentoTech](https://github.com/RulyCisnero/QA-AutomationTalentoTech)
+
+## Integración continua (CI/CD)
+
+El proyecto incluye un workflow de **GitHub Actions** ubicado en `.github/workflows/qa-automation.yml`, en la raíz del repositorio.
+
+El workflow se ejecuta automáticamente cuando:
+
+- Se realiza un `push` a la rama `main`.
+- Se abre o actualiza un Pull Request dirigido a `main`.
+- Se inicia manualmente desde la pestaña **Actions** de GitHub (`workflow_dispatch`).
+
+### Etapas del pipeline
+
+1. Descarga el código del repositorio.
+2. Configura Python 3.13 y Chrome estable en un runner Ubuntu.
+3. Instala las dependencias declaradas en `PreEntrega/requirements.txt`.
+4. Ejecuta las pruebas UI y API con Pytest. Chrome se inicia en modo headless dentro del entorno CI.
+5. Publica el reporte HTML y las capturas disponibles como artefacto de la ejecución.
+
+### Consultar el reporte de GitHub Actions
+
+1. Abrir el repositorio en GitHub y entrar en la pestaña **Actions**.
+2. Seleccionar la ejecución del workflow **QA Automation Tests**.
+3. En la sección **Artifacts**, descargar `qa-automation-report`.
+4. Descomprimir el archivo y abrir `reporte.html` en un navegador.
+
+El artefacto se conserva durante 14 días. La publicación del reporte se intenta incluso cuando alguna prueba falla, para facilitar el diagnóstico. Un workflow exitoso indica que todas las etapas finalizaron correctamente, incluida la suite de pruebas.
