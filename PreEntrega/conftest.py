@@ -79,7 +79,7 @@ def pytest_runtest_makereport(item, call):
 
     # Guardamos el resultado final por test. También contemplamos errores
     # durante setup/teardown, donde puede no existir una fase "call".
-    if report.when == "call" or report.failed:
+    if report.when == "call" or report.failed or report.skipped:
         _TEST_RESULTS[report.nodeid] = report
 
     if report.when == "call":
