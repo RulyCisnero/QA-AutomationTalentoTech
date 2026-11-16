@@ -47,6 +47,13 @@ jobs:
         run: |
           python -m pytest test -v --capture=tee-sys --html=reports/reporte.html --self-contained-html
 
+      - name: Run BDD scenarios with Behave
+        working-directory: PreEntrega
+        env:
+          CI: 'true'
+        run: |
+          python -m behave features --format pretty
+
       - name: Upload HTML report and screenshots
         if: always()
         uses: actions/upload-artifact@v7
