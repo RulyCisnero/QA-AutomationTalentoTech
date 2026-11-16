@@ -13,9 +13,16 @@ from utils.driver_factory import create_driver
 SCREENSHOTS_DIR = Path("reports/screenshots")
 
 
+def _scenario_tags(scenario):
+    """Incluye las etiquetas heredadas de la característica."""
+    return set(scenario.tags) | set(scenario.feature.tags)
+
+
 def before_scenario(context, scenario):
     """Prepara únicamente los recursos que necesita cada escenario."""
-    if "ui" in scenario.tags:
+    tags = _scenario_tags(scenario)
+
+    if "ui" in tags:
         context.driver = create_driver()
         context.login_page = LoginPage(context.driver)
         context.inventory_page = InventoryPage(context.driver)
@@ -23,13 +30,15 @@ def before_scenario(context, scenario):
         context.checkout_page = CheckoutPage(context.driver)
         context.checkout_overview_page = CheckoutOverviewPage(context.driver)
 
-    if "api" in scenario.tags:
+    if "api" in tags:
         context.api_client = APIClient()
 
 
 def after_scenario(context, scenario):
     """Cierra recursos y conserva evidencia visual cuando falla un escenario."""
-    if "ui" in scenario.tags and hasattr(context, "driver"):
+    tags = _scenario_tags(scenario)
+
+    if "ui" in tags and hasattr(context, "driver"):
         if scenario.status == "failed":
             SCREENSHOTS_DIR.mkdir(parents=True, exist_ok=True)
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -43,5 +52,5 @@ def after_scenario(context, scenario):
 
         context.driver.quit()
 
-    if "api" in scenario.tags and hasattr(context, "api_client"):
+    if "api" in tags and hasattr(context, "api_client"):
         context.api_client.session.close()
