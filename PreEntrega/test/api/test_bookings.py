@@ -6,21 +6,6 @@ from api.data.booking_factory import create_booking_payload
 from utils.logger import log_step, log_success
 
 
-def create_booking_payload():
-    """Genera los datos de una reserva de prueba."""
-    return {
-        "firstname": "Raul",
-        "lastname": "Cisnero",
-        "totalprice": 150,
-        "depositpaid": True,
-        "bookingdates": {
-            "checkin": "2026-12-10",
-            "checkout": "2026-12-15"
-        },
-        "additionalneeds": "Breakfast"
-    }
-
-
 def test_obtener_lista_de_reservas():
     """Verifica que la API devuelva una lista de reservas."""
 
