@@ -21,6 +21,7 @@ La suite combina pruebas de interfaz sobre [SauceDemo](https://www.saucedemo.com
 |---|---|
 | Python | Lenguaje de programación |
 | Pytest | Ejecución, organización y parametrización de pruebas |
+| Behave | Ejecución de escenarios BDD escritos en Gherkin |
 | Selenium WebDriver | Automatización de la interfaz web |
 | Requests | Envío de solicitudes HTTP a la API |
 | pytest-html | Generación de reportes HTML |
@@ -96,6 +97,43 @@ Los escenarios negativos de login se parametrizan utilizando datos externos alma
 | GET | Obtener reservas | Código HTTP, estructura JSON y contenido de la respuesta |
 | POST | Crear reserva | Código HTTP, identificador generado y datos devueltos |
 | DELETE | Eliminar reserva | Autenticación, eliminación de la reserva y verificación posterior |
+
+## Suite BDD con Gherkin y Behave
+
+Además de la suite Pytest original, el proyecto incorpora una segunda forma de
+describir y ejecutar los mismos flujos funcionales mediante **Gherkin y Behave**.
+Los archivos `.feature` documentan el comportamiento esperado en lenguaje
+natural y sus step definitions implementan las acciones en Python.
+
+La suite BDD reutiliza los Page Objects de SauceDemo, el cliente HTTP
+`APIClient`, los endpoints y la fábrica compartida de datos para reservas.
+No reemplaza Pytest: ambas suites se pueden ejecutar de manera independiente.
+
+### Escenarios BDD incluidos
+
+- **UI - SauceDemo:** login exitoso, login negativo con ejemplos, consulta del
+  inventario, agregado de productos al carrito y finalización de compra.
+- **API - Restful-Booker:** consulta GET, creación POST y eliminación DELETE
+  de reservas.
+
+### Ejecutar Behave
+
+Desde `PreEntrega/`:
+
+```powershell
+python -m behave features --format pretty
+```
+
+Ejecutar únicamente los escenarios UI o API:
+
+```powershell
+python -m behave features --tags=ui --format pretty
+python -m behave features --tags=api --format pretty
+```
+
+Cuando falla un escenario UI, Behave guarda una captura con fecha y hora en
+`reports/screenshots/`. La suite BDD también se ejecuta en el workflow de
+GitHub Actions junto con Pytest.
 
 ## Requisitos previos
 
