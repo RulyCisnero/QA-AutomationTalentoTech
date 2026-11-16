@@ -305,8 +305,9 @@ El workflow se ejecuta automáticamente cuando:
 1. Descarga el código del repositorio.
 2. Configura Python 3.13 y Chrome estable en un runner Ubuntu.
 3. Instala las dependencias declaradas en `PreEntrega/requirements.txt`.
-4. Ejecuta las pruebas UI y API con Pytest. Chrome se inicia en modo headless dentro del entorno CI.
-5. Publica el reporte HTML y las capturas disponibles como artefacto de la ejecución.
+4. Ejecuta la suite UI y API original con Pytest y genera el reporte HTML. Chrome se inicia en modo headless dentro del entorno CI.
+5. Ejecuta los escenarios BDD de UI y API con Behave, también con Chrome headless.
+6. Publica el reporte HTML de Pytest y las capturas disponibles (incluidas las de Behave) como artefacto de la ejecución.
 
 ### Consultar el reporte de GitHub Actions
 
