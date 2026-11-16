@@ -2,6 +2,7 @@
 from api.clients.api_client import APIClient
 from api.endpoints.bookings import BOOKINGS_ENDPOINT
 from api.endpoints.auth import AUTH_ENDPOINT
+from api.data.booking_factory import create_booking_payload
 from utils.logger import log_step, log_success
 
 
