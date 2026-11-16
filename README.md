@@ -43,9 +43,24 @@ PreEntrega/
 ├── api/
 │   ├── clients/
 │   │   └── api_client.py
+│   ├── data/
+│   │   └── booking_factory.py
 │   └── endpoints/
 │       ├── auth.py
 │       └── bookings.py
+├── features/
+│   ├── api/
+│   │   └── bookings.feature
+│   ├── ui/
+│   │   ├── login.feature
+│   │   ├── inventory.feature
+│   │   ├── cart.feature
+│   │   └── checkout.feature
+│   ├── steps/
+│   │   ├── api_steps.py
+│   │   └── ui_steps.py
+│   ├── environment.py
+│   └── README.md
 ├── pages/
 │   ├── login_page.py
 │   ├── inventory_page.py
@@ -72,8 +87,7 @@ PreEntrega/
 │   └── screenshots/
 ├── conftest.py
 ├── pytest.ini
-├── requirements.txt
-└── README.md
+└── requirements.txt
 ```
 
 ## Casos automatizados
